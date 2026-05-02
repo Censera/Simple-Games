@@ -8,9 +8,11 @@ int	main(void)
 {
 	Game game = { 0 };
 
+	SetConfigFlags(FLAG_MSAA_4X_HINT);
+
 	InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE);
 	InitAudioDevice();
-	SetConfigFlags(FLAG_MSAA_4X_HINT);
+
 	SetTargetFPS(FPS_CAP);
 
 	LoadAssets(&game.assets);
@@ -18,7 +20,7 @@ int	main(void)
 
 	while (!WindowShouldClose())
 	{
-		GameState(&game);
+		HandleInput(&game);
 		UpdateGame(&game);
 
 		BeginDrawing();
@@ -28,7 +30,7 @@ int	main(void)
 		EndDrawing();
 	}
 
-	UnloadFont(game.assets.fonts[0]);
+	UnloadFont(game.assets.font);
 	UnloadSound(game.assets.sounds[0]);
 	UnloadSound(game.assets.sounds[1]);
 	CloseAudioDevice();

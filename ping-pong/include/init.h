@@ -11,7 +11,6 @@ typedef	struct
 	Vector2	position;
 	Vector2	velocity;
 	float	alpha;
-	float	lifeSpan;
 	bool	active;
 }	Particle;
 
@@ -19,7 +18,7 @@ typedef enum { LEFT, RIGHT }	Control;
 
 typedef struct
 {
-	Font	fonts[1]; // One font
+	Font	font; // One font
 	Sound	sounds[2]; // Two sounds
 }	Assets;
 

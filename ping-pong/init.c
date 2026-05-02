@@ -1,11 +1,11 @@
-#	include <stdio.h>
+#	include <stddef.h>
 #	include <raylib.h>
 #	include	"include/config.h"
 #	include "include/init.h"
 
 void	LoadAssets(Assets *a)
 {
-	a->fonts[0] = LoadFontEx("font/Pong.ttf", 68, NULL, 0);
+	a->font = LoadFontEx("font/Pong.ttf", 68, NULL, 0);
 	a->sounds[0] = LoadSound("sound/BallBounce.wav");
 	a->sounds[1] = LoadSound("sound/Score.wav");
 }

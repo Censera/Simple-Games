@@ -33,9 +33,9 @@ void	Draw(Game *g)
 	DrawCircleV(g->ball.position, g->ball.radius, FG_COLOR);
 
 	DrawTextEx(
-	g->assets.fonts[0],
+	g->assets.font,
 	info_score,
-	(Vector2){(WINDOW_WIDTH - (float)MeasureText(info_score, 44))/2, MARGIN},
+	(Vector2){ (WINDOW_WIDTH - (float)MeasureTextEx(g->assets.font, info_score, 44, 1).x)/2, MARGIN },
 	44,	// font size
 	1,	// font spacing
 	FG_COLOR
@@ -45,7 +45,7 @@ void	Draw(Game *g)
 	{
 		DrawTextEx
 		(
-			g->assets.fonts[0],
+			g->assets.font,
 			"||",
 			(Vector2){ MARGIN, MARGIN},
 			32,	// font size

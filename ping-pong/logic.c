@@ -6,18 +6,18 @@
 #	include	"include/init.h"
 #	include	"include/rendering.h"
 
-void	UpdatePlayer(Control ctrl, Player *p, float speed, float dt)
+void	UpdatePlayer(Control ctrl, Player *p, float dt)
 {
 	if (ctrl == LEFT)
 	{
-		if (IsKeyDown(KEY_W)) p->position.y -= speed * dt;
-		if (IsKeyDown(KEY_S)) p->position.y += speed * dt;
+		if (IsKeyDown(KEY_W)) p->position.y -= p->speed * dt;
+		if (IsKeyDown(KEY_S)) p->position.y += p->speed * dt;
 	}
 
 	if (ctrl == RIGHT)
 	{
-		if (IsKeyDown(KEY_UP)) p->position.y -= speed * dt;
-		if (IsKeyDown(KEY_DOWN))p->position.y += speed * dt;
+		if (IsKeyDown(KEY_UP)) p->position.y -= p->speed * dt;
+		if (IsKeyDown(KEY_DOWN))p->position.y += p->speed * dt;
 	}
 
 	float btmBound = WINDOW_HEIGHT - (p->size.y +MARGIN);
@@ -47,7 +47,7 @@ void	ResetGame(Game *g)
 		InitGame(g);
 }
 
-void	GameState(Game *g)
+void	HandleInput(Game *g)
 {
 	if (IsKeyPressed(KEY_P)
 	|| IsKeyPressed(KEY_SPACE)
@@ -61,7 +61,7 @@ void	GameState(Game *g)
 void	UpdateCollision(Game *g, Player *p)
 {
 
-	Rectangle	Paddle = (Rectangle)
+	Rectangle	paddle = (Rectangle)
 	{
 		p->position.x,
 		p->position.y,
@@ -69,19 +69,19 @@ void	UpdateCollision(Game *g, Player *p)
 		p->size.y,
 	};
 
-	if (CheckCollisionCircleRec(g->ball.position, g->ball.radius, Paddle))
+	if (CheckCollisionCircleRec(g->ball.position, g->ball.radius, paddle))
 	{
 		g->ball.speed.x *= -1;
 
-		float	PaddleCenterY = p->position.y +(p->size.y /2);
-		float	DistantFromCenter = g->ball.position.y -PaddleCenterY;
+		float	paddleCenterY = p->position.y +(p->size.y /2);
+		float	distanceFromCenter = g->ball.position.y -paddleCenterY;
 
-		float	NormDistant = DistantFromCenter / (p->size.y /2);
+		float	normDistant = distanceFromCenter / (p->size.y /2);
 
-		float	BounceIntendity = 400.0f;
-		float	Randomness = (float)GetRandomValue(-20, 20);
+		float	bounceIntensity = 400.0f;
+		float	randomness = (float)GetRandomValue(-20, 20);
 
-		g->ball.speed.y = ((NormDistant * BounceIntendity) + Randomness);
+		g->ball.speed.y = ((normDistant * bounceIntensity) + randomness);
 
 		if (g->ball.speed.x > 0) g->ball.position.x = p->position.x + p->size.x + g->ball.radius;
 		else g->ball.position.x = p->position.x - g->ball.radius;
@@ -90,6 +90,17 @@ void	UpdateCollision(Game *g, Player *p)
 
 		CreateBurst(g->particles, 5, g->ball.position);
 	}
+}
+
+static	void	ResetBall(Game *g)
+{
+		g->ball.position = (Vector2){ WINDOW_WIDTH/2, WINDOW_HEIGHT/2 };
+		g->ball.speed = (Vector2)
+		{
+			GetRandomValue(0, 1) ? BALL_SPEED : -BALL_SPEED,
+			(float)GetRandomValue(-100, 100)
+		};
+		g->isPaused = true;
 }
 
 void	CheckScore(Game *g)
@@ -109,19 +120,7 @@ void	CheckScore(Game *g)
 		);
 		PlaySound(g->assets.sounds[1]);
 
-		g->ball.position = (Vector2)
-		{
-			WINDOW_WIDTH/2,
-			WINDOW_HEIGHT/2
-		};
-
-		g->isPaused = true;
-
-		g->ball.speed = (Vector2)
-		{
-			GetRandomValue(0, 1) ? BALL_SPEED : -BALL_SPEED,
-			(float)GetRandomValue(-100, 100)
-		};
+		ResetBall(g);
 	}
 	else if (g->ball.position.x >= WINDOW_WIDTH + g->ball.radius*2)
 	{
@@ -138,19 +137,7 @@ void	CheckScore(Game *g)
 		);
 		PlaySound(g->assets.sounds[1]);
 
-		g->ball.position = (Vector2)
-		{
-			WINDOW_WIDTH/2,
-			WINDOW_HEIGHT/2
-		};
-
-		g->isPaused = true;
-
-		g->ball.speed = (Vector2)
-		{
-			GetRandomValue(0, 1) ? BALL_SPEED : -BALL_SPEED,
-			(float)GetRandomValue(-100, 100)
-		};
+		ResetBall(g);
 	}
 }
 
@@ -163,8 +150,8 @@ void	UpdateGame(Game *g)
 
 	if (!g->isPaused)
 	{
-		UpdatePlayer(LEFT, &g->playerOne, g->playerOne.speed, dt);
-		UpdatePlayer(RIGHT, &g->playerTwo, g->playerTwo.speed, dt);
+		UpdatePlayer(LEFT, &g->playerOne, dt);
+		UpdatePlayer(RIGHT, &g->playerTwo, dt);
 
 		UpdateBall(g, dt);
 		UpdateCollision(g, &g->playerOne);
