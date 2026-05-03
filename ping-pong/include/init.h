@@ -49,6 +49,7 @@ typedef struct
 
 void	InitGame(Game *g);
 void	LoadAssets(Assets *a);
+void	CloseGame(Game *g);
 
 #endif
 

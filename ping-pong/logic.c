@@ -1,6 +1,5 @@
 #	include	<raylib.h>
 #	include	<raymath.h>
-#	include	<math.h>
 #	include	"include/logic.h"
 #	include	"include/config.h"
 #	include	"include/init.h"
@@ -64,9 +63,9 @@ void	UpdateCollision(Game *g, Player *p)
 	Rectangle	paddle = (Rectangle)
 	{
 		p->position.x,
-		p->position.y,
+		p->position.y - 8,
 		p->size.x,
-		p->size.y,
+		p->size.y + 8,
 	};
 
 	if (CheckCollisionCircleRec(g->ball.position, g->ball.radius, paddle))
@@ -76,12 +75,12 @@ void	UpdateCollision(Game *g, Player *p)
 		float	paddleCenterY = p->position.y +(p->size.y /2);
 		float	distanceFromCenter = g->ball.position.y -paddleCenterY;
 
-		float	normDistant = distanceFromCenter / (p->size.y /2);
+		float	normDistance = distanceFromCenter / (p->size.y /2);
 
 		float	bounceIntensity = 400.0f;
 		float	randomness = (float)GetRandomValue(-20, 20);
 
-		g->ball.speed.y = ((normDistant * bounceIntensity) + randomness);
+		g->ball.speed.y = ((normDistance * bounceIntensity) + randomness);
 
 		if (g->ball.speed.x > 0) g->ball.position.x = p->position.x + p->size.x + g->ball.radius;
 		else g->ball.position.x = p->position.x - g->ball.radius;

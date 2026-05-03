@@ -30,10 +30,6 @@ int	main(void)
 		EndDrawing();
 	}
 
-	UnloadFont(game.assets.font);
-	UnloadSound(game.assets.sounds[0]);
-	UnloadSound(game.assets.sounds[1]);
-	CloseAudioDevice();
-	CloseWindow();
+	CloseGame(&game);
 	return (0);
 }
