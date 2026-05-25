@@ -55,16 +55,6 @@ int	main(void)
 					BG_COLOR
 				);
 
-				DrawModelWiresEx
-				(
-					apple,
-					position,
-					rotationAxis,
-					rotationAngle,
-					wiresScale,
-					GRAY
-				);
-
 			EndMode3D();
 
 		EndDrawing();
